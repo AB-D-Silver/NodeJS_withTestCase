@@ -42,7 +42,7 @@ export default async function getData(productId, shopify) {
 
   let productByHandleresponse = await fetch(`${shopify.URL}/graphql.json`, {
     method: "POST",
-    body: data,
+    body: data2,
     headers: {
       "Content-Type": "application/json",
       "X-Shopify-Access-Token": shopify.access,
