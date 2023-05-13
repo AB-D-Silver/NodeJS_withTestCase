@@ -1,0 +1,56 @@
+import fetch from "node-fetch";
+import getData from "../check.js";
+
+jest.mock("node-fetch");
+
+describe("getData", () => {
+  it("should return variant data and options", async () => {
+    const mockResponse = {
+      data: {
+        productVariants: {
+          edges: [
+            {
+              node: {
+                id: "123",
+                product: {
+                  id: "Product/456",
+                  handle: "test-product",
+                },
+                selectedOptions: [
+                  {
+                    name: "Size",
+                    value: "Small",
+                  },
+                  {
+                    name: "Color",
+                    value: "Red",
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    fetch.mockResolvedValue({
+      json: () => mockResponse,
+    });
+
+    const productId = "123";
+    const shopify = {
+      URL: "https://example.com",
+      access: "TOKEN",
+    };
+
+    const result = await getData(productId, shopify);
+
+    expect(result).toEqual([
+      {
+        productId: "456",
+        handle: "test-product",
+      },
+      ["Size", "Color"],
+    ]);
+  });
+});
